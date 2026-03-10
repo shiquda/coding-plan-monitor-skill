@@ -1,12 +1,11 @@
 # MiniMax 配置指南
 
-## 获取 Token
+## 获取 API Key
 
-1. 登录 https://www.minimaxi.com/
-2. F12 打开开发者工具 → Network
-3. 刷新页面，找到 `/coding_plan/remains` 请求
-4. 复制 Request Headers 里的 `Authorization` 值
-5. 去掉 `Bearer ` 前缀，填入 `.env`
+1. 登录 MiniMax 开放平台开发者后台：https://platform.minimaxi.com/
+2. 进入"API Keys"页面
+3. 创建或复制已有的 API Key
+4. 填入 `.env`
 
 ## 环境变量
 
@@ -21,4 +20,4 @@ MINIMAX_CODING_API_KEY=your_api_key_here
 
 ## 注意事项
 
-⚠️ 如果在 MiniMax 官网点击重新生成API Key，原 Key 会失效，需要重新获取并更新 。
+⚠️ 如果在 MiniMax 官网点击"重新生成"API Key，原 Key 会失效，需要重新获取并更新 `.env`。

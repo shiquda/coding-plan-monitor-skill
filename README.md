@@ -6,7 +6,7 @@
 
 | 平台 | 7天限制 | 5小时限制 |
 |------|---------|-----------|
-| MiniMax | ✅ | - |
+| MiniMax | - | ✅ |
 | RightCode | ✅ | - |
 | Kimi Coding Plan | ✅ | ✅ |
 

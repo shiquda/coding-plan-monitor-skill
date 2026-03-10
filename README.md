@@ -42,7 +42,7 @@ cp .env.example .env
 ✅ Kimi Coding Plan-5h ░░░░░░░░░░
    📈 0/100 (0%) | 💰 剩余 100 | 19:44
 
-✅ MiniMax ░░░░░░░░░░
+✅ Mini░░░░Max ░░░░░░
    📈 10/600 (2%) | 💰 剩余 590 | 4h38m
 
 ✅ RightCode ████░░░░░░
@@ -56,29 +56,16 @@ cp .env.example .env
 - **RightCode**: 登录 right.codes → F12 → /subscriptions/list
 - **Kimi**: 登录 kimi.com → F12 → GetUsages
 
-## License
-
-MIT
-
-## 支持更多平台
+## 欢迎贡献
 
 欢迎提交 Issue 或 PR 添加更多平台的 Coding Plan 监控支持！
 
-### 已支持平台
-
-- MiniMax (5h)
-- RightCode (7d)
-- Kimi Coding Plan (7d + 5h)
-
 ### 待支持
 
-- FoxCode (Cloudflare 盾拦截)
-- 火山引擎 (无公开 API)
+- [ ] 火山引擎
+- [ ] Codex 官方订阅
+- [ ] Claude 官方订阅
 
-## 贡献
-
-欢迎提交 Issue 报告问题，或提交 PR 添加新平台支持！
-
-## 许可证
+## License
 
 MIT

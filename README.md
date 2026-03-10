@@ -59,3 +59,26 @@ cp .env.example .env
 ## License
 
 MIT
+
+## 支持更多平台
+
+欢迎提交 Issue 或 PR 添加更多平台的 Coding Plan 监控支持！
+
+### 已支持平台
+
+- MiniMax (5h)
+- RightCode (7d)
+- Kimi Coding Plan (7d + 5h)
+
+### 待支持
+
+- FoxCode (Cloudflare 盾拦截)
+- 火山引擎 (无公开 API)
+
+## 贡献
+
+欢迎提交 Issue 报告问题，或提交 PR 添加新平台支持！
+
+## 许可证
+
+MIT

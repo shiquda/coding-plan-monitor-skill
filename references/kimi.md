@@ -21,4 +21,3 @@ KIMI_BEARER_TOKEN=your_bearer_token_here
 
 ## 注意事项
 
-⚠️ Kimi 的 Bearer Token 有效期较短（几分钟），不适合长期无人值守的定时监控。如需长期监控，需要频繁手动更新 Token。

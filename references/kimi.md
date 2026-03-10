@@ -21,3 +21,8 @@ KIMI_BEARER_TOKEN=your_bearer_token_here
 
 ## 注意事项
 
+
+
+## 注意事项
+
+⚠️ 如果在 Kimi 官网点击重新获取或刷新Token，原 Token 会失效，需要重新抓取并更新 。

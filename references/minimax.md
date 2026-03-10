@@ -18,3 +18,7 @@ MINIMAX_CODING_API_KEY=your_api_key_here
 
 - **限制类型**: 5 小时
 - **免费额度**: 600 次/5小时
+
+## 注意事项
+
+⚠️ 如果在 MiniMax 官网点击重新生成API Key，原 Key 会失效，需要重新获取并更新 。

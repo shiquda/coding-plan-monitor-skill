@@ -48,11 +48,56 @@ else
     PERCENT_7D=0
 fi
 
+format_duration() {
+    local seconds=$1
+    if [ "$seconds" -le 0 ] 2>/dev/null; then
+        echo "刚刚刷新"
+        return
+    fi
+    local days=$((seconds / 86400))
+    local hours=$(((seconds % 86400) / 3600))
+    local minutes=$(((seconds % 3600) / 60))
+
+    if [ "$days" -gt 0 ]; then
+        if [ "$hours" -gt 0 ]; then
+            echo "${days}d ${hours}h 后刷新"
+        else
+            echo "${days}d 后刷新"
+        fi
+    elif [ "$hours" -gt 0 ]; then
+        if [ "$minutes" -gt 0 ]; then
+            echo "${hours}h ${minutes}m 后刷新"
+        else
+            echo "${hours}h 后刷新"
+        fi
+    else
+        echo "${minutes}m 后刷新"
+    fi
+}
+
 if [ -n "$RESET_7D_RAW" ] && [ "$RESET_7D_RAW" != "null" ]; then
-    RESET_7D=$(TZ=Asia/Shanghai date -d "$RESET_7D_RAW" "+%H:%M" 2>/dev/null || echo "未知")
+    RESET_7D_TS=$(date -d "$RESET_7D_RAW" +%s 2>/dev/null || echo "")
+    NOW_TS=$(date +%s)
+    if [ -n "$RESET_7D_TS" ]; then
+        RESET_7D=$(format_duration $((RESET_7D_TS - NOW_TS)))
+    else
+        RESET_7D="未知"
+    fi
 else
     RESET_7D="未知"
 fi
+if [ -n "$RESET_7D_RAW" ] && [ "$RESET_7D_RAW" != "null" ]; then
+    RESET_7D_TS=$(date -d "$RESET_7D_RAW" +%s 2>/dev/null || echo "")
+    NOW_TS=$(date +%s)
+    if [ -n "$RESET_7D_TS" ]; then
+        RESET_7D=$(format_duration $((RESET_7D_TS - NOW_TS)))
+    else
+        RESET_7D="未知"
+    fi
+else
+    RESET_7D="未知"
+fi
+# 如果 API 返回的是周窗口重置时间，就直接按剩余时长显示；避免只显示时刻误导为“今天刷新”.
 
 if [ "$PERCENT_7D" -lt 60 ]; then
     STATUS_7D="✅"
@@ -75,7 +120,13 @@ else
 fi
 
 if [ -n "$RESET_5H_RAW" ] && [ "$RESET_5H_RAW" != "null" ]; then
-    RESET_5H=$(TZ=Asia/Shanghai date -d "$RESET_5H_RAW" "+%H:%M" 2>/dev/null || echo "未知")
+    RESET_5H_TS=$(date -d "$RESET_5H_RAW" +%s 2>/dev/null || echo "")
+    NOW_TS=$(date +%s)
+    if [ -n "$RESET_5H_TS" ]; then
+        RESET_5H=$(format_duration $((RESET_5H_TS - NOW_TS)))
+    else
+        RESET_5H="未知"
+    fi
 else
     RESET_5H="未知"
 fi

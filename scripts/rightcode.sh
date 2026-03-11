@@ -47,15 +47,47 @@ SUMMARY=$(echo "$RESPONSE" | jq --arg now "$NOW" '
 
 TOTAL=$(echo "$SUMMARY" | jq -r '.theoretical_total')
 USED=$(echo "$SUMMARY" | jq -r '.simulated_used')
-REMAINING=$(echo "$SUMMARY" | jq -r '.current_remaining')
+# 统一口径：既然 TOTAL/USED 用的是“潜在双倍额度”视角，REMAINING 也必须按同口径计算
+REMAINING=$(awk "BEGIN {printf \"%.1f\", $TOTAL - $USED}")
 HAS_RESET=$(echo "$SUMMARY" | jq -r '.has_reset')
 HAS_NOT_RESET=$(echo "$SUMMARY" | jq -r '.has_not_reset')
 
-# 计算百分比
+# 计算百分比与清爽显示
 PERCENT=$(awk "BEGIN {if ($TOTAL > 0) printf \"%.0f\", ($USED/$TOTAL)*100; else print 0}")
+USED=$(awk "BEGIN {printf \"%.1f\", $USED}")
+TOTAL=$(awk "BEGIN {printf \"%.2f\", $TOTAL}")
 
-# RightCode 每天北京时间 12:00 重置
-RESET_TIME="12:00"
+# RightCode 每天北京时间 24:00 重置，统一显示剩余时长
+format_duration() {
+    local seconds=$1
+    if [ "$seconds" -le 0 ] 2>/dev/null; then
+        echo "刚刚刷新"
+        return
+    fi
+    local days=$((seconds / 86400))
+    local hours=$(((seconds % 86400) / 3600))
+    local minutes=$(((seconds % 3600) / 60))
+
+    if [ "$days" -gt 0 ]; then
+        if [ "$hours" -gt 0 ]; then
+            echo "${days}d ${hours}h 后刷新"
+        else
+            echo "${days}d 后刷新"
+        fi
+    elif [ "$hours" -gt 0 ]; then
+        if [ "$minutes" -gt 0 ]; then
+            echo "${hours}h ${minutes}m 后刷新"
+        else
+            echo "${hours}h 后刷新"
+        fi
+    else
+        echo "${minutes}m 后刷新"
+    fi
+}
+
+NOW_TS=$(TZ=Asia/Shanghai date +%s)
+TOMORROW_MIDNIGHT_TS=$(TZ=Asia/Shanghai date -d "tomorrow 00:00" +%s)
+RESET_TIME=$(format_duration $((TOMORROW_MIDNIGHT_TS - NOW_TS)))
 
 # 状态判断图标
 if [ "$PERCENT" -lt 60 ]; then
@@ -66,15 +98,5 @@ else
     STATUS="🔴"
 fi
 
-# 详细重置状态标识
-RESET_INDICATOR=""
-if [ "$HAS_RESET" == "true" ] && [ "$HAS_NOT_RESET" == "true" ]; then
-    RESET_INDICATOR="🔄⏳"
-elif [ "$HAS_RESET" == "true" ]; then
-    RESET_INDICATOR="🔄"
-elif [ "$HAS_NOT_RESET" == "true" ]; then
-    RESET_INDICATOR="⏳"
-fi
-
-# 输出统一格式 (剩余额度显示当前真实的 remaining，移除到期时间)
-echo "RightCode|$USED|$TOTAL|$PERCENT%|$REMAINING|$RESET_INDICATOR|$STATUS"
+# 输出统一格式 (统一显示多久后刷新)
+echo "RightCode|$USED|$TOTAL|$PERCENT%|$REMAINING|$RESET_TIME|$STATUS"

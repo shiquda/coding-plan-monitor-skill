@@ -37,10 +37,35 @@ USED=$((TOTAL - REMAINING))
 # 计算百分比
 PERCENT=$(awk "BEGIN {printf \"%.0f\", ($USED/$TOTAL)*100}")
 
-# 转换剩余时间为可读格式
-HOURS=$((REMAINS_MS / 3600000))
-MINUTES=$(((REMAINS_MS % 3600000) / 60000))
-RESET_TIME="${HOURS}h${MINUTES}m"
+# 转换剩余时间为统一格式
+format_duration() {
+    local seconds=$1
+    if [ "$seconds" -le 0 ] 2>/dev/null; then
+        echo "刚刚刷新"
+        return
+    fi
+    local days=$((seconds / 86400))
+    local hours=$(((seconds % 86400) / 3600))
+    local minutes=$(((seconds % 3600) / 60))
+
+    if [ "$days" -gt 0 ]; then
+        if [ "$hours" -gt 0 ]; then
+            echo "${days}d ${hours}h 后刷新"
+        else
+            echo "${days}d 后刷新"
+        fi
+    elif [ "$hours" -gt 0 ]; then
+        if [ "$minutes" -gt 0 ]; then
+            echo "${hours}h ${minutes}m 后刷新"
+        else
+            echo "${hours}h 后刷新"
+        fi
+    else
+        echo "${minutes}m 后刷新"
+    fi
+}
+
+RESET_TIME=$(format_duration $((REMAINS_MS / 1000)))
 
 # 状态判断
 if [ "$PERCENT" -lt 60 ]; then

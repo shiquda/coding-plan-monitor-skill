@@ -114,10 +114,8 @@ cat ~/.claude/.credentials.json | jq -r '.claudeAiOauth.accessToken'
 
 对用户回复时：
 1. **直接调用脚本**：`./scripts/check_all_usage.sh`
-2. **先贴完整原始输出**
-3. 再给简易解释
-4. 如有必要再补一条简短建议
-5. 对 Kimi 的建议必须遵守上面的“双重限制绑定逻辑”
+2. **只贴原始输出**，不加任何自行总结的内容
+3. 如用户要求评论，再按实际状态简短评论
 
 ### 默认执行约定（新增）
 
@@ -130,6 +128,6 @@ cat ~/.claude/.credentials.json | jq -r '.claudeAiOauth.accessToken'
 默认理解为：
 - **无需再追问格式偏好**
 - 直接运行 `./scripts/check_all_usage.sh`
-- 按“原始结果 + 简易说明”的格式返回
+- **只贴原始输出**，不做任何自行总结
 
 不要只因为 5h 快刷新，就给出误导性建议。

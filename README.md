@@ -31,6 +31,10 @@ cp .env.example .env
 > cd coding-plan-monitor-skill
 > ```
 
+## 输出示例
+
+![Usage Demo](assets/usage-demo.jpg)
+
 ## Token 配置
 
 各平台 Token 获取方式详见 `references/` 目录。

@@ -14,17 +14,22 @@
 ## 快速开始
 
 ```bash
-# 1. 克隆仓库
-git clone https://github.com/shiquda/coding-plan-monitor-skill.git
-cd coding-plan-monitor-skill
+# 1. 通过 OpenClaw 安装（推荐）
+npx skills add shiquda/coding-plan-monitor-skill
 
 # 2. 复制配置
 cp .env.example .env
 
-# 3. 编辑 .env 填入 Token
+# 3. 编辑 .env 填入 Token（详见 references/）
 # 4. 运行
 ./scripts/check_all_usage.sh
 ```
+
+> 如果 `npx skills add` 不可用，可改用 Git 克隆：
+> ```bash
+> git clone https://github.com/shiquda/coding-plan-monitor-skill.git
+> cd coding-plan-monitor-skill
+> ```
 
 ## Token 配置
 

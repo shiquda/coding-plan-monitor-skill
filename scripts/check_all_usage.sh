@@ -4,7 +4,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROVIDERS_DIR="$SCRIPT_DIR/../providers"
+PROVIDERS_DIR="$SCRIPT_DIR"
 
 # 生成进度条 (10个格子)
 generate_progress_bar() {
@@ -22,9 +22,9 @@ generate_progress_bar() {
 echo "📊 Coding Plan 用量汇总 ($(date +%Y-%m-%d))"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# 遍历所有 provider 脚本
+# 遍历所有 provider 脚本（排除自身）
 for provider in "$PROVIDERS_DIR"/*.sh; do
-    if [ -f "$provider" ] && [ -x "$provider" ]; then
+    if [ -f "$provider" ] && [ -x "$provider" ] && [ "$(basename "$provider")" != "check_all_usage.sh" ]; then
         # 获取所有输出行
         RESULTS=$("$provider" 2>&1 || echo "ERROR|N/A|N/A|N/A|N/A|N/A|❌ 执行失败")
         

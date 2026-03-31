@@ -13,7 +13,8 @@ description: 统一监控 MiniMax、RightCode、Kimi Coding Plan 用量。支持
 |------|----------|
 | MiniMax | 5小时 |
 | RightCode | 7天 |
-| Kimi Coding Plan | 7天 + 5小时 |
+| Kimi Coding Plan | 7天 + 5小时（**同一池额度的双重限制**） |
+| Claude Pro | 7天 + 5小时（**独立于其他平台**） |
 
 ## 快速开始
 
@@ -33,6 +34,26 @@ cp .env.example .env
 - **MiniMax**: 见 [references/minimax.md](references/minimax.md)
 - **RightCode**: 见 [references/rightcode.md](references/rightcode.md)
 - **Kimi**: 见 [references/kimi.md](references/kimi.md)
+- **Claude Pro**: 见 [references/claude-pro.md](references/claude-pro.md)
+
+### Claude Pro Token 获取步骤
+
+Claude Pro 使用 OAuth Token，非普通 API Key。
+
+**Windows：**
+1. 确保 Claude Code 已登录（`claude --login`）
+2. 读取凭据文件：
+   ```powershell
+   Get-Content "$env:USERPROFILE\.claude\.credentials.json"
+   ```
+3. 找到 `claudeAiOauth.accessToken` 字段值
+
+**Linux / macOS / WSL：**
+```bash
+cat ~/.claude/.credentials.json | jq -r '.claudeAiOauth.accessToken'
+```
+
+> ⚠️ 这是未公开的内部接口，Anthropic 可能随时更改。
 
 ## 输出格式
 
@@ -53,8 +74,62 @@ cp .env.example .env
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
+## Kimi 判读规则（重要）
+
+**Kimi 7d 和 Kimi 5h 不是两池独立额度，而是同一套使用的双重限制。**
+
+这意味着：
+- 用一次 Kimi，同时会消耗 **5h 窗口** 和 **7d 窗口**
+- 不能因为 “5h 快刷新了” 就默认推荐继续用 Kimi
+- **建议时必须优先看 7d 总体健康度**，再看 5h 短期窗口
+
+### 正确建议逻辑
+
+1. **如果 7d 已经偏高（如 >70%）**
+   - 即使 5h 快刷新，也**不默认推荐**继续用 Kimi
+   - 优先建议 MiniMax / RightCode
+
+2. **如果 7d 还健康**
+   - 这时 5h 临近刷新，才有“顺手用掉”的意义
+
+3. **对用户的表述要求**
+   - 不要把 Kimi 5h 和 Kimi 7d 当成两池可独立调度的额度来说
+   - 应明确说：这是 **同一池额度的双重限制**
+
+### 错误示例
+
+❌ `Kimi 5h 快刷新了，现在最适合用 Kimi`
+
+### 正确示例
+
+✅ `Kimi 5h 虽然快刷新了，但 7d 已经到 76%，不建议因为短期窗口重置就继续烧 Kimi。现在优先 MiniMax / RightCode。`
+
 ## 状态说明
 
 - ✅ 充足 (<85%)
 - ⚠️ 警告 (85-95%)
 - 🔴 紧张 (>95%)
+
+## 回复规范（重要）
+
+对用户回复时：
+1. **直接调用脚本**：`./scripts/check_all_usage.sh`
+2. **先贴完整原始输出**
+3. 再给简易解释
+4. 如有必要再补一条简短建议
+5. 对 Kimi 的建议必须遵守上面的“双重限制绑定逻辑”
+
+### 默认执行约定（新增）
+
+当用户说：
+- “查一下用量”
+- “看下 coding plan”
+- “用 coding-plan-monitor 查一下”
+- 或明确要求使用本 skill
+
+默认理解为：
+- **无需再追问格式偏好**
+- 直接运行 `./scripts/check_all_usage.sh`
+- 按“原始结果 + 简易说明”的格式返回
+
+不要只因为 5h 快刷新，就给出误导性建议。

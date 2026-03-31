@@ -9,6 +9,7 @@
 | MiniMax | 5小时 |
 | RightCode | 7天 |
 | Kimi Coding Plan | 7天 + 5小时 |
+| Claude Pro | 7天 + 5小时（独立于其他平台） |
 
 ## 快速开始
 

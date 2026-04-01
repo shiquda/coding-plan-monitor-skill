@@ -14,7 +14,6 @@ description: 统一监控 MiniMax、RightCode、Kimi Coding Plan 用量。支持
 | MiniMax | 5小时 |
 | RightCode | 7天 |
 | Kimi Coding Plan | 7天 + 5小时（**同一池额度的双重限制**） |
-| Claude Pro | 7天 + 5小时（**独立于其他平台**） |
 
 ## 快速开始
 
@@ -34,26 +33,6 @@ cp .env.example .env
 - **MiniMax**: 见 [references/minimax.md](references/minimax.md)
 - **RightCode**: 见 [references/rightcode.md](references/rightcode.md)
 - **Kimi**: 见 [references/kimi.md](references/kimi.md)
-- **Claude Pro**: 见 [references/claude-pro.md](references/claude-pro.md)
-
-### Claude Pro Token 获取步骤
-
-Claude Pro 使用 OAuth Token，非普通 API Key。
-
-**Windows：**
-1. 确保 Claude Code 已登录（`claude --login`）
-2. 读取凭据文件：
-   ```powershell
-   Get-Content "$env:USERPROFILE\.claude\.credentials.json"
-   ```
-3. 找到 `claudeAiOauth.accessToken` 字段值
-
-**Linux / macOS / WSL：**
-```bash
-cat ~/.claude/.credentials.json | jq -r '.claudeAiOauth.accessToken'
-```
-
-> ⚠️ 这是未公开的内部接口，Anthropic 可能随时更改。
 
 ## 输出格式
 

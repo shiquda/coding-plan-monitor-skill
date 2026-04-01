@@ -33,8 +33,11 @@ for provider in "$PROVIDERS_DIR"/*.sh; do
             # 跳过空行
             [ -z "$NAME" ] && continue
             
-            # 提取数字百分比
+            # 提取数字百分比（非数字则跳过该行）
             PERCENT_NUM=$(echo "$PERCENT" | tr -d '%')
+            if ! [[ "$PERCENT_NUM" =~ ^[0-9]+$ ]]; then
+                continue
+            fi
             
             # 生成进度条
             BAR=$(generate_progress_bar $PERCENT_NUM)

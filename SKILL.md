@@ -14,6 +14,7 @@ description: 统一监控 MiniMax、RightCode、Kimi Coding Plan 用量。支持
 | MiniMax | 5小时 |
 | RightCode | 7天 |
 | Kimi Coding Plan | 7天 + 5小时（**同一池额度的双重限制**） |
+| Codex (ChatGPT Plus) | 7天 + 5小时 |
 
 ## 快速开始
 
@@ -33,6 +34,7 @@ cp .env.example .env
 - **MiniMax**: 见 [references/minimax.md](references/minimax.md)
 - **RightCode**: 见 [references/rightcode.md](references/rightcode.md)
 - **Kimi**: 见 [references/kimi.md](references/kimi.md)
+- **Codex**: 见 [references/codex.md](references/codex.md)
 
 ## 输出格式
 

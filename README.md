@@ -9,6 +9,7 @@
 | MiniMax | 5小时 |
 | RightCode | 7天 |
 | Kimi Coding Plan | 7天 + 5小时 |
+| Webshare Proxy | 流量上限 |
 | Codex (ChatGPT Plus) | 7天 + 5小时 |
 
 ## 快速开始

@@ -1,44 +1,50 @@
 # Codex (ChatGPT Plus) 用量查询
 
-## Token 获取方式
+## 接口说明
 
-1. 登录 https://chatgpt.com/
-2. F12 打开开发者工具 → Network
-3. 刷新页面，找到 `/backend-api/wham/usage` 请求
-4. 复制 **Authorization** header 的值（Bearer 后面那串 token）
-5. 同一个请求里复制 **Account-Id** header 的值
+通过 CLIProxyAPI 的 Management API 透传，自动发现所有已登录的 Codex 账号并取平均值。
+
+**关键端点**：
+1. `GET /v0/management/auth-files` - 获取所有已注册账号
+2. `POST /v0/management/api-call` - 透传请求到上游 API
 
 ## 环境变量配置
 
 在 `.env` 中添加：
 
 ```bash
-CODEX_BEARER_TOKEN=your_bearer_token_here
-CODEX_ACCOUNT_ID=your_account_id_here
+# CLIProxyAPI 地址
+CODEX_CLI_PROXY_URL=http://100.88.53.43:8317
+
+# Management API 密钥（remote-management.secret-key）
+CODEX_MANAGEMENT_KEY=your-secret-key
 ```
 
-## 接口说明
+## CLIProxyAPI 服务端要求
 
-```
-GET https://chatgpt.com/backend-api/wham/usage
-Authorization: Bearer <token>
-Account-Id: <account_id>
+服务器需要开启远程管理：
+
+```yaml
+# config.yaml
+remote-management:
+  allow-remote: true
+  secret-key: "your-secret-key"
 ```
 
 ## 返回字段
+
+每个账号返回内容包含两个配额窗口：
 
 ```json
 {
   "rate_limit": {
     "primary_window": {
-      "used_percent": 10,
-      "limit_window_seconds": 18000,
-      "reset_after_seconds": 16824
+      "used_percent": 91,
+      "reset_after_seconds": 4751
     },
     "secondary_window": {
-      "used_percent": 3,
-      "limit_window_seconds": 604800,
-      "reset_after_seconds": 603624
+      "used_percent": 72,
+      "reset_after_seconds": 40813
     }
   }
 }
@@ -48,15 +54,5 @@ Account-Id: <account_id>
 
 - **5h 窗口**：滚动 5 小时（18000s），用 `primary_window`
 - **7d 窗口**：7 天（604800s），用 `secondary_window`
-- `used_percent` 直接是百分比数字（0-100），无需计算
-
-## 与其他平台的关系
-
-Codex 与各平台 Coding Plan **完全独立**：
-
-| 平台 | 额度来源 |
-|------|----------|
-| Kimi/MiniMax/RightCode | 各平台 Coding Plan |
-| Codex | ChatGPT Plus 订阅 |
-
-可以同时使用，互不冲突。
+- 多账号时输出综合**平均值**
+- Verbose 模式下显示每个账号的独立用量
